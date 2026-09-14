@@ -28,10 +28,10 @@ docker compose logs localstack | grep -A 20 "== Resumo =="
 
 | Recurso | Valor |
 |---|---|
-| VPC | `10.0.0.0/22` |
-| Subnet pública us-east-1a | `10.0.1.0/25` |
-| Subnet pública us-east-1b | `10.0.0.128/25` |
-| Subnet privada us-east-1a | `10.0.2.0/25` |
+| VPC (`vpc-pilates`) | `10.0.0.0/16` |
+| Subnet pública (`subnet-public`) | `10.0.1.0/25` — us-east-1a |
+| Subnet privada (`subnet-private-exemplo`) | `10.0.2.0/25` — us-east-1a |
+| Subnet pública substitutiva (`subnet-public-substitutiva`) | `10.0.0.128/25` — us-east-1b |
 | Internet Gateway | anexado à VPC, rota `0.0.0.0/0` na route table pública |
 | Route table privada | sem rota de saída pra internet |
 | Security Group `sg-web` | HTTP (80) público, SSH (22) só de dentro da VPC |

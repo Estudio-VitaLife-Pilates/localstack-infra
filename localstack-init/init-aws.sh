@@ -9,11 +9,11 @@ REGION="us-east-1"
 
 echo "== VPC =="
 VPC_ID=$(awslocal ec2 create-vpc \
-  --cidr-block 10.0.0.0/22 \
+  --cidr-block 10.0.0.0/16 \
   --region $REGION \
   --query 'Vpc.VpcId' --output text)
-awslocal ec2 create-tags --resources $VPC_ID --tags Key=Name,Value=vitalife-vpc
-echo "VPC criada: $VPC_ID"
+awslocal ec2 create-tags --resources $VPC_ID --tags Key=Name,Value=vpc-pilates
+echo "VPC criada: $VPC_ID (vpc-pilates)"
 
 echo "== Internet Gateway =="
 IGW_ID=$(awslocal ec2 create-internet-gateway --region $REGION \
@@ -27,22 +27,22 @@ SUBNET_PUB_1A=$(awslocal ec2 create-subnet \
   --vpc-id $VPC_ID --cidr-block 10.0.1.0/25 \
   --availability-zone ${REGION}a \
   --query 'Subnet.SubnetId' --output text)
-awslocal ec2 create-tags --resources $SUBNET_PUB_1A --tags Key=Name,Value=subnet-publica-1a
-echo "Subnet pública us-east-1a: $SUBNET_PUB_1A (10.0.1.0/25)"
+awslocal ec2 create-tags --resources $SUBNET_PUB_1A --tags Key=Name,Value=subnet-public
+echo "Subnet pública us-east-1a: $SUBNET_PUB_1A (subnet-public, 10.0.1.0/25)"
 
 SUBNET_PUB_1B=$(awslocal ec2 create-subnet \
   --vpc-id $VPC_ID --cidr-block 10.0.0.128/25 \
   --availability-zone ${REGION}b \
   --query 'Subnet.SubnetId' --output text)
-awslocal ec2 create-tags --resources $SUBNET_PUB_1B --tags Key=Name,Value=subnet-publica-1b
-echo "Subnet pública us-east-1b: $SUBNET_PUB_1B (10.0.0.128/25)"
+awslocal ec2 create-tags --resources $SUBNET_PUB_1B --tags Key=Name,Value=subnet-public-substitutiva
+echo "Subnet pública us-east-1b: $SUBNET_PUB_1B (subnet-public-substitutiva, 10.0.0.128/25)"
 
 SUBNET_PRIV_1A=$(awslocal ec2 create-subnet \
   --vpc-id $VPC_ID --cidr-block 10.0.2.0/25 \
   --availability-zone ${REGION}a \
   --query 'Subnet.SubnetId' --output text)
-awslocal ec2 create-tags --resources $SUBNET_PRIV_1A --tags Key=Name,Value=subnet-privada-1a
-echo "Subnet privada us-east-1a: $SUBNET_PRIV_1A (10.0.2.0/25)"
+awslocal ec2 create-tags --resources $SUBNET_PRIV_1A --tags Key=Name,Value=subnet-private-exemplo
+echo "Subnet privada us-east-1a: $SUBNET_PRIV_1A (subnet-private-exemplo, 10.0.2.0/25)"
 
 echo "== Route Tables =="
 RT_PUBLICA=$(awslocal ec2 create-route-table --vpc-id $VPC_ID \
@@ -67,7 +67,7 @@ SG_WEB=$(awslocal ec2 create-security-group \
 awslocal ec2 authorize-security-group-ingress --group-id $SG_WEB \
   --protocol tcp --port 80 --cidr 0.0.0.0/0
 awslocal ec2 authorize-security-group-ingress --group-id $SG_WEB \
-  --protocol tcp --port 22 --cidr 10.0.0.0/22
+  --protocol tcp --port 22 --cidr 10.0.0.0/16
 echo "Security group sg-web criado: $SG_WEB (80 público, 22 só dentro da VPC)"
 
 SG_APP_DB=$(awslocal ec2 create-security-group \
@@ -85,6 +85,6 @@ echo "Bucket 'vitalife-backup' criado no LocalStack."
 
 echo ""
 echo "== Resumo =="
-echo "VPC: $VPC_ID (10.0.0.0/22)"
-echo "Subnets: pub-1a=$SUBNET_PUB_1A pub-1b=$SUBNET_PUB_1B priv-1a=$SUBNET_PRIV_1A"
+echo "VPC: $VPC_ID (vpc-pilates, 10.0.0.0/16)"
+echo "Subnets: subnet-public=$SUBNET_PUB_1A subnet-public-substitutiva=$SUBNET_PUB_1B subnet-private-exemplo=$SUBNET_PRIV_1A"
 echo "Security Groups: sg-web=$SG_WEB sg-app-db=$SG_APP_DB"
