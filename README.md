@@ -2,11 +2,17 @@
 
 Emulação local da infraestrutura AWS do projeto Estúdio VitaLife Pilates, usando [LocalStack] Community
 
-Cria, via IaC (`awslocal`), a rede da arquitetura definida com o professor (VPC, subnets, route tables, security groups) e o bucket S3 de backup — tudo o que o LocalStack Community realmente emula. ALB e EFS não estão aqui porque exigem LocalStack Pro (pago) e não têm emulação real no plano gratuito.
+Cria, via IaC (`awslocal`), a rede da arquitetura definida com o professor (VPC, subnets, route tables, security groups) e o bucket S3 de backup. ALB e EFS não estão aqui porque exigem LocalStack Pro (pago) e não têm emulação real no plano gratuito.
 
 ## Como rodar
 
-Pré-requisito: Docker Desktop aberto.
+Pré-requisitos:
+1. Docker Desktop aberto.
+2. Uma conta gratuita no LocalStack (sem cartão) — o serviço `ec2` (VPC/Subnet/Security Group) pede um token de autenticação, mesmo no plano free. O S3 sozinho não pediria, mas como usamos os dois juntos, todo mundo do time precisa configurar o seu:
+   - Crie/entre em uma conta em https://app.localstack.cloud
+   - Pegue seu token em https://app.localstack.cloud/workspace/auth-tokens
+   - Copie `.env.example` para `.env` (nessa mesma pasta) e cole seu token lá
+   - `.env` é local e não vai pro Git — cada pessoa usa o próprio token
 
 ```bash
 docker compose up -d
