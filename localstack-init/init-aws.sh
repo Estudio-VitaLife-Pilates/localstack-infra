@@ -1,7 +1,7 @@
 #!/bin/bash
 # Roda automaticamente quando o LocalStack fica pronto (init-hook do container).
 # Recria, via IaC (awslocal), a infraestrutura de rede da arquitetura AWS do projeto
-# (VPC + subnets + route tables + security group) e o bucket S3 de backup.
+# (VPC + subnets + route tables + security group) e os buckets S3 (backup + camadas bronze/silver/gold).
 
 set -e
 
@@ -83,8 +83,14 @@ echo "== S3 =="
 awslocal s3 mb s3://vitalife-backup
 echo "Bucket 'vitalife-backup' criado no LocalStack."
 
+awslocal s3 mb s3://vitalife-bronze
+awslocal s3 mb s3://vitalife-silver
+awslocal s3 mb s3://vitalife-gold
+echo "Buckets 'vitalife-bronze', 'vitalife-silver' e 'vitalife-gold' criados no LocalStack (camadas do data lake)."
+
 echo ""
 echo "== Resumo =="
 echo "VPC: $VPC_ID (vpc-pilates, 10.0.0.0/16)"
 echo "Subnets: subnet-public=$SUBNET_PUB_1A subnet-public-substitutiva=$SUBNET_PUB_1B subnet-private-exemplo=$SUBNET_PRIV_1A"
 echo "Security Groups: sg-web=$SG_WEB sg-app-db=$SG_APP_DB"
+echo "Buckets S3: vitalife-backup, vitalife-bronze, vitalife-silver, vitalife-gold"

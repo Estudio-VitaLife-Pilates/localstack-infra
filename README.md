@@ -36,7 +36,8 @@ docker compose logs localstack | grep -A 20 "== Resumo =="
 | Route table privada | sem rota de saída pra internet |
 | Security Group `sg-web` | HTTP (80) público, SSH (22) só de dentro da VPC |
 | Security Group `sg-app-db` | 8080/3306 só a partir do `sg-web` |
-| Bucket S3 | `vitalife-backup` |
+| Bucket S3 (backup) | `vitalife-backup` |
+| Buckets S3 (data lake) | `vitalife-bronze`, `vitalife-silver`, `vitalife-gold` |
 
 ## Parar e limpar
 
